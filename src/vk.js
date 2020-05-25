@@ -1,13 +1,55 @@
 import fetchJsonp from 'fetch-jsonp'
 import bridge from '@vkontakte/vk-bridge'
 
+const groupId = -180174909
+let access_token = ''
+bridge.subscribe((e) => handleBridgeEvent(e))
+
 // Отправляет событие нативному клиенту
 bridge.send('VKWebAppInit', {})
 
+function handleBridgeEvent(e) {
+  console.log(e)
+  const eventType = e.detail.type
+  if (eventType == 'VKWebAppGetCommunityTokenResult') {
+    access_token = e.detail.data.access_token
+  }
+}
+
+export async function sendWidget(data) {
+  const body = data.slice(0, 10).map((user) => {
+    const item = [{
+      icon_id: 'id' + user.id,
+      text: user.name
+    }, {
+      text: user.count
+    }]
+    return item
+  })
+  let options = {
+    v: '5.103',
+    access_token: access_token,
+    code: `return {
+      "title": "Заголовок для виджета",
+      "title_url": "vk.com/title_url",
+      "head": [
+          {
+              "text": "Пользователь"
+          },
+          {
+              "text": "Лайки",
+          }
+      ],
+      "body": ${JSON.stringify(body)}
+  };`,
+    type: 'table',
+  }
+  const result = await callAPI('appWidgets.update', options)
+  console.log(result)
+}
+
 const token =
   'fcd7d10dfcd7d10dfcd7d10da6fca5fd21ffcd7fcd7d10da21cf9e0cd6060f7bc952157'
-
-const groupId = -180174909
 
 export async function getUsersData(userIds) {
   let options = {
@@ -19,7 +61,7 @@ export async function getUsersData(userIds) {
   const red = result.reduce((accumulator, currentValue) => {
     accumulator.push({
       id: currentValue.id,
-      name: currentValue.first_name + ' ' + currentValue.last_name
+      name: currentValue.first_name + ' ' + currentValue.last_name,
     })
     return accumulator
   }, [])

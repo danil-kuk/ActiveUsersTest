@@ -1,11 +1,24 @@
 import * as vk from './vk'
+import bridge from '@vkontakte/vk-bridge'
 
+let testButton = document.getElementById('testButton')
 let wallButton = document.getElementById('wallButton')
+
+
+testButton.addEventListener('click', async function () {
+  bridge.send('VKWebAppGetCommunityToken', {
+    app_id: 7482412,
+    group_id: 189385055,
+    scope: 'app_widget',
+  })
+  testButton.style.display = 'none'
+  wallButton.style.display = 'block'
+})
 
 wallButton.addEventListener('click', async function () {
   const result = await vk.getWallPostsIds(30)
   const data = await handlePosts(result)
-  createTable(data)
+  vk.sendWidget(data)
 })
 
 async function handlePosts(data) {
@@ -18,27 +31,14 @@ async function handlePosts(data) {
         dict[user.id] = {
           name: user.name,
           count: 1,
-          id: user.id
+          id: user.id,
         }
       } else {
         dict[user.id].count++
       }
     }
   }
-  let items = Object.keys(dict).map(key => dict[key])
+  let items = Object.keys(dict).map((key) => dict[key])
   items.sort((a, b) => b.count - a.count)
   return items
-}
-
-function createTable(data) {
-  var k = '<tbody>'
-  for (let i = 0; i < data.length; i++) {
-    k += '<tr>'
-    k += '<td>' + data[i].id + '</td>'
-    k += '<td>' + data[i].name + '</td>'
-    k += '<td>' + data[i].count + '</td>'
-    k += '</tr>'
-  }
-  k += '</tbody>'
-  document.getElementById('tableData').innerHTML = k
 }

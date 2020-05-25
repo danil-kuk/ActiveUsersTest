@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "parcel ./src/index.html",
+    "start": "parcel ./src/index.html --port 8080",
     "build": "parcel build ./src/index.html",
     "deploy-build": "env PUBLIC_URL=/ActiveUsersTest/ parcel build ./src/index.html --public-url /ActiveUsersTest/",
     "deploy": "sh ./deploy.sh",
