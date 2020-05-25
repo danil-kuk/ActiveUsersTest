@@ -6,7 +6,7 @@
   "scripts": {
     "start": "parcel ./src/index.html",
     "build": "parcel build ./src/index.html",
-    "deploy-build": "parcel build ./src/index.html",
+    "deploy-build": "env PUBLIC_URL=/ActiveUsersTest/ parcel build ./src/index.html --public-url /ActiveUsersTest/",
     "deploy": "sh ./deploy.sh",
     "lint": "eslint . --fix"
   },
@@ -20,6 +20,7 @@
     "parcel-bundler": "^1.12.4"
   },
   "dependencies": {
+    "@vkontakte/vk-bridge": "^2.2.2",
     "fetch-jsonp": "^1.1.3"
   }
 }

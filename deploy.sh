@@ -26,7 +26,7 @@ git commit -m "Deploy ${now}"
 # Pushing to gh-pages
 echo Pushing to GitHub Pages...
 # Add your own GitHub UserName and RepoName
-git push -f https://github.com/<UserName>/<RepoName>.git master:gh-pages
+git push -f https://github.com/danil-kuk/ActiveUsersTest.git master:gh-pages
 
 # Removing output build folder and cache
 echo Removing build folder...

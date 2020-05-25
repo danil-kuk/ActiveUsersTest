@@ -1,4 +1,8 @@
 import fetchJsonp from 'fetch-jsonp'
+import bridge from '@vkontakte/vk-bridge'
+
+// Отправляет событие нативному клиенту
+bridge.send('VKWebAppInit', {})
 
 const token =
   'fcd7d10dfcd7d10dfcd7d10da6fca5fd21ffcd7fcd7d10da21cf9e0cd6060f7bc952157'
