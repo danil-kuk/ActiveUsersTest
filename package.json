@@ -1,0 +1,25 @@
+{
+  "name": "activeusersvk",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "parcel ./src/index.html",
+    "build": "parcel build ./src/index.html",
+    "deploy-build": "parcel build ./src/index.html",
+    "deploy": "sh ./deploy.sh",
+    "lint": "eslint . --fix"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.9.6",
+    "@babel/plugin-transform-runtime": "^7.9.6",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^7.1.0",
+    "parcel-bundler": "^1.12.4"
+  },
+  "dependencies": {
+    "fetch-jsonp": "^1.1.3"
+  }
+}
