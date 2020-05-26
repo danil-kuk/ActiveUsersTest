@@ -1,24 +1,16 @@
 import * as vk from './vk'
-import bridge from '@vkontakte/vk-bridge'
 
-let testButton = document.getElementById('testButton')
-let wallButton = document.getElementById('wallButton')
-
-
-testButton.addEventListener('click', async function () {
-  bridge.send('VKWebAppGetCommunityToken', {
-    app_id: 7482412,
-    group_id: 189385055,
-    scope: 'app_widget',
-  })
-  testButton.style.display = 'none'
-  wallButton.style.display = 'block'
-})
+const wallButton = document.getElementById('wallButton')
+const loader = document.getElementById('loader')
 
 wallButton.addEventListener('click', async function () {
-  const result = await vk.getWallPostsIds(30)
-  const data = await handlePosts(result)
-  vk.sendWidget(data)
+  wallButton.style.display = 'none'
+  loader.style.display = 'block'
+  const wallPostsIds = await vk.getWallPostsIds(30)
+  const likesRating = await handlePosts(wallPostsIds)
+  await vk.widgetPreview(likesRating)
+  loader.style.display = 'none'
+  wallButton.style.display = 'block'
 })
 
 async function handlePosts(data) {

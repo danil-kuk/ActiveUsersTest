@@ -2,36 +2,30 @@ import fetchJsonp from 'fetch-jsonp'
 import bridge from '@vkontakte/vk-bridge'
 
 const groupId = -180174909
-let access_token = ''
-bridge.subscribe((e) => handleBridgeEvent(e))
+const appId = 7482412
+const apiVersion = '5.103'
+
+bridge.subscribe((e) => console.log(e))
 
 // Отправляет событие нативному клиенту
 bridge.send('VKWebAppInit', {})
 
-function handleBridgeEvent(e) {
-  console.log(e)
-  const eventType = e.detail.type
-  if (eventType == 'VKWebAppGetCommunityTokenResult') {
-    access_token = e.detail.data.access_token
-  }
-}
-
-export async function sendWidget(data) {
+export async function widgetPreview(data) {
   const body = data.slice(0, 10).map((user) => {
-    const item = [{
-      icon_id: 'id' + user.id,
-      text: user.name
-    }, {
-      text: user.count
-    }]
+    const item = [
+      {
+        icon_id: 'id' + user.id,
+        text: user.name,
+      },
+      {
+        text: user.count,
+      },
+    ]
     return item
   })
-  let options = {
-    v: '5.103',
-    access_token: access_token,
+  const result = await bridge.send('VKWebAppShowCommunityWidgetPreviewBox', {
     code: `return {
       "title": "Заголовок для виджета",
-      "title_url": "vk.com/title_url",
       "head": [
           {
               "text": "Пользователь"
@@ -43,9 +37,24 @@ export async function sendWidget(data) {
       "body": ${JSON.stringify(body)}
   };`,
     type: 'table',
-  }
-  const result = await callAPI('appWidgets.update', options)
-  console.log(result)
+    group_id: 189385055,
+  })
+  .catch(er => console.log('Widget Error!', er))
+  return result
+}
+
+/**
+ * @deprecated However, the code might be usefull
+ */
+export async function getAppWidgetToken() {
+  return await bridge
+    .send('VKWebAppGetCommunityToken', {
+      app_id: appId,
+      group_id: 189385055,
+      scope: 'app_widget',
+    })
+    .then((response) => response.access_token)
+    .catch((ex) => console.log('Token Error!', ex))
 }
 
 const token =
@@ -53,7 +62,7 @@ const token =
 
 export async function getUsersData(userIds) {
   let options = {
-    v: '5.103',
+    v: apiVersion,
     access_token: token,
     user_ids: userIds,
   }
@@ -70,7 +79,7 @@ export async function getUsersData(userIds) {
 
 export async function getWallPostsIds(count = 1) {
   let options = {
-    v: '5.103',
+    v: apiVersion,
     access_token: token,
     count: count,
     owner_id: groupId,
@@ -85,7 +94,7 @@ export async function getWallPostsIds(count = 1) {
 
 export async function getLikesFromPost(postId) {
   let options = {
-    v: '5.103',
+    v: apiVersion,
     access_token: token,
     owner_id: groupId,
     type: 'post',
