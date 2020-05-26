@@ -9,13 +9,20 @@ bridge.subscribe((e) => console.log(e))
 
 // Отправляет событие нативному клиенту
 bridge.send('VKWebAppInit', {})
+.then(() => {
+  document.getElementById('main-form').style.display = 'block'
+  document.getElementById('loader').style.display = 'none'
+})
+.catch((ex) => {
+  console.log(ex)
+})
 
-export async function widgetPreview(data) {
-  const body = data.slice(0, 10).map((user) => {
+export async function widgetPreview(rating, userData) {
+  const body = rating.map((user) => {
     const item = [
       {
         icon_id: 'id' + user.id,
-        text: user.name,
+        text: userData[user.id].name,
       },
       {
         text: user.count,
@@ -53,14 +60,8 @@ export async function getUsersData(userIds) {
     user_ids: userIds,
   }
   const result = await callAPI('users.get', options)
-  const red = result.reduce((accumulator, currentValue) => {
-    accumulator.push({
-      id: currentValue.id,
-      name: currentValue.first_name + ' ' + currentValue.last_name,
-    })
-    return accumulator
-  }, [])
-  return red
+  
+  return result
 }
 
 export async function getWallPostsIds(groupId, count = 1) {

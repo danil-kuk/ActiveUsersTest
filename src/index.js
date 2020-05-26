@@ -12,31 +12,43 @@ mainForm.addEventListener('submit', function (e) {
 async function handleForm(groupId) {
   mainForm.style.display = 'none'
   loader.style.display = 'block'
-  const wallPostsIds = await vk.getWallPostsIds(groupId, 30)
-  const likesRating = await handlePosts(groupId, wallPostsIds)
-  await vk.widgetPreview(likesRating)
+  const wallPostsIds = await vk.getWallPostsIds(groupId, 2)
+  const rating = await getTenMostActiveUsers(groupId, wallPostsIds)
+  const userIds = rating.reduce((accumulator, elem) => [...accumulator, elem.id], [])
+  const userData = await getReducedUserData(userIds)
+  await vk.widgetPreview(rating, userData)
   loader.style.display = 'none'
   mainForm.style.display = 'block'
 }
 
-async function handlePosts(groupId, data) {
+async function getTenMostActiveUsers(groupId, data) {
   let dict = {}
   for (const postId of data) {
-    const likes = await vk.getLikesFromPost(groupId, postId)
-    const users = await vk.getUsersData(likes)
-    for (const user of users) {
-      if (dict[user.id] === undefined) {
-        dict[user.id] = {
-          name: user.name,
+    const userIds = await vk.getLikesFromPost(groupId, postId)
+    for (const id of userIds) {
+      if (dict[id] === undefined) {
+        dict[id] = {
           count: 1,
-          id: user.id,
+          id: id
         }
       } else {
-        dict[user.id].count++
+        dict[id].count++
       }
     }
   }
   let items = Object.keys(dict).map((key) => dict[key])
   items.sort((a, b) => b.count - a.count)
-  return items
+  return items.slice(0, 10)
+}
+
+async function getReducedUserData(userIds) {
+  const userData = await vk.getUsersData(userIds)
+  const reducedUserData = userData.reduce((accumulator, currentValue) => {
+    accumulator[currentValue.id] = {
+      id: currentValue.id,
+      name: currentValue.first_name + ' ' + currentValue.last_name,
+    }
+    return accumulator
+  }, {})
+  return reducedUserData
 }
