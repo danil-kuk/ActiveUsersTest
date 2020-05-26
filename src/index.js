@@ -3,7 +3,7 @@ import * as vk from './vk'
 const mainForm = document.getElementById('main-form')
 const loader = document.getElementById('loader')
 
-mainForm.addEventListener('submit', function (e) {
+mainForm.addEventListener('submit', function(e) {
   e.preventDefault()
   const groupId = mainForm['group-id'].value
   handleForm(groupId)
@@ -22,7 +22,7 @@ async function handleForm(groupId) {
 }
 
 async function getMostActiveUsers(groupId, data) {
-  let dict = {}
+  const dict = {}
   for (const postId of data) {
     const userIds = await vk.getLikesFromPost(groupId, postId)
     for (const id of userIds) {
@@ -36,7 +36,7 @@ async function getMostActiveUsers(groupId, data) {
       }
     }
   }
-  let items = Object.keys(dict).map((key) => dict[key])
+  const items = Object.keys(dict).map((key) => dict[key])
   items.sort((a, b) => b.count - a.count)
   return items.slice(0, 10)
 }
@@ -46,7 +46,7 @@ async function getReducedUserData(userIds) {
   const reducedUserData = userData.reduce((accumulator, currentValue) => {
     accumulator[currentValue.id] = {
       id: currentValue.id,
-      name: currentValue.first_name + ' ' + currentValue.last_name,
+      name: currentValue.first_name + ' ' + currentValue.last_name
     }
     return accumulator
   }, {})

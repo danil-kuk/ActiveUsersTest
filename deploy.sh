@@ -5,9 +5,16 @@
 # abort on errors
 set -e
 
+# Set your GitHub UserName and Repo
+repo="ActiveUsersTest"
+user="danil-kuk"
+
 # build
 echo Building. This may take a minute...
-npm run deploy-build
+export PUBLIC_URL="/${repo}/"
+npm run build -- --public-url $PUBLIC_URL
+
+# copy additional files into the build output directory
 
 # navigate into the build output directory
 cd dist
@@ -25,8 +32,7 @@ git commit -m "Deploy ${now}"
 
 # Pushing to gh-pages
 echo Pushing to GitHub Pages...
-# Add your own GitHub UserName and RepoName
-git push -f https://github.com/danil-kuk/ActiveUsersTest.git master:gh-pages
+git push -f https://github.com/${user}/${repo}.git master:gh-pages
 
 # Removing output build folder and cache
 echo Removing build folder...

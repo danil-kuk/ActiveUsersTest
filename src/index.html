@@ -6,6 +6,7 @@
   <meta name="viewport"
     content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no, viewport-fit=cover">
   <meta name="theme-color" content="#000000">
+  <link rel="shortcut icon" href="https://vk.com/images/icons/favicons/fav_logo.ico">
   <link rel="stylesheet" href="index.css">
   <title>Active Users</title>
 </head>
@@ -14,6 +15,7 @@
   <noscript>
     You need to enable JavaScript to run this app.
   </noscript>
+  
   <div class="content">
     <form id="main-form" style="display: none;">
       <div class="params">
@@ -21,7 +23,9 @@
       </div>
       <input type="submit" value="Добавить виджет">
     </form>
-
+    <div class="alert-msg" style="display: none;" id="alert">
+      <strong>Ошибка!</strong><br>Приложение может работать только при запуске из сообщества
+    </div>
     <div class="lds-ellipsis" id="loader">
       <div></div>
       <div></div>

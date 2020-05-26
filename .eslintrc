@@ -1,5 +1,5 @@
 {
-    "extends": "eslint:recommended",
+    "extends": "standard",
     "parser": "babel-eslint",
     "env": {
       "browser": true,
@@ -13,8 +13,9 @@
       "no-underscore-dangle": 0,
       "no-use-before-define": 0,
       "eol-last": 0,
-      "quotes": [2, "single"],
+      "quotes": ["error", "single", { "allowTemplateLiterals": true }],
       "semi": [2, "never"],
-      "no-unused-vars": "warn"
+      "space-before-function-paren": ["warn", "never"],
+      "eqeqeq": 0
     }
   }

@@ -1,6 +1,9 @@
 html {
   font-family: Helvetica, sans-serif;
 }
+.alert-msg{
+  margin-bottom: 10px;
+}
 .content{
   display: flex;
   flex-direction: column;
