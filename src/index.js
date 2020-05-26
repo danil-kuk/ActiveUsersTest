@@ -12,8 +12,8 @@ mainForm.addEventListener('submit', function (e) {
 async function handleForm(groupId) {
   mainForm.style.display = 'none'
   loader.style.display = 'block'
-  const wallPostsIds = await vk.getWallPostsIds(groupId, 2)
-  const rating = await getTenMostActiveUsers(groupId, wallPostsIds)
+  const wallPostsIds = await vk.getWallPostsIds(groupId, 50)
+  const rating = await getMostActiveUsers(groupId, wallPostsIds)
   const userIds = rating.reduce((accumulator, elem) => [...accumulator, elem.id], [])
   const userData = await getReducedUserData(userIds)
   await vk.widgetPreview(rating, userData)
@@ -21,7 +21,7 @@ async function handleForm(groupId) {
   mainForm.style.display = 'block'
 }
 
-async function getTenMostActiveUsers(groupId, data) {
+async function getMostActiveUsers(groupId, data) {
   let dict = {}
   for (const postId of data) {
     const userIds = await vk.getLikesFromPost(groupId, postId)

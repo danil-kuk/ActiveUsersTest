@@ -4,18 +4,30 @@ import bridge from '@vkontakte/vk-bridge'
 const apiVersion = '5.103'
 const urlParams = new URLSearchParams(window.location.search)
 const initGroupId = parseInt(urlParams.get('vk_group_id'))
+if (!initGroupId) {
+  let div = document.createElement('div')
+  div.className = 'alert'
+  div.style.marginBottom = '10px'
+  div.innerHTML =
+    '<strong>Ошибка!</strong><br>Приложение может работать только при запуске из сообщества'
+  const loader = document.getElementById('loader')
+  loader.before(div)
+  loader.style.display = 'none'
+} else {
+  // Логирует все события нативного клиента в консоль
+  bridge.subscribe((e) => console.log(e))
 
-bridge.subscribe((e) => console.log(e))
-
-// Отправляет событие нативному клиенту
-bridge.send('VKWebAppInit', {})
-.then(() => {
-  document.getElementById('main-form').style.display = 'block'
-  document.getElementById('loader').style.display = 'none'
-})
-.catch((ex) => {
-  console.log(ex)
-})
+  // Отправляет событие нативному клиенту
+  bridge
+    .send('VKWebAppInit', {})
+    .then(() => {
+      document.getElementById('main-form').style.display = 'block'
+      document.getElementById('loader').style.display = 'none'
+    })
+    .catch((ex) => {
+      console.log(ex)
+    })
+}
 
 export async function widgetPreview(rating, userData) {
   const body = rating.map((user) => {
@@ -30,8 +42,9 @@ export async function widgetPreview(rating, userData) {
     ]
     return item
   })
-  const result = await bridge.send('VKWebAppShowCommunityWidgetPreviewBox', {
-    code: `return {
+  const result = await bridge
+    .send('VKWebAppShowCommunityWidgetPreviewBox', {
+      code: `return {
       "title": "Заголовок для виджета",
       "head": [
           {
@@ -43,10 +56,10 @@ export async function widgetPreview(rating, userData) {
       ],
       "body": ${JSON.stringify(body)}
   };`,
-    type: 'table',
-    group_id: initGroupId,
-  })
-  .catch(er => console.log('Widget Error!', er))
+      type: 'table',
+      group_id: initGroupId,
+    })
+    .catch((er) => console.log('Widget Error!', er))
   return result
 }
 
@@ -60,7 +73,7 @@ export async function getUsersData(userIds) {
     user_ids: userIds,
   }
   const result = await callAPI('users.get', options)
-  
+
   return result
 }
 
