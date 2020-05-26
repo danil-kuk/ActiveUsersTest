@@ -8,14 +8,14 @@ html {
   align-items: center;
   justify-self: center;
   margin: auto;
-  width: 30vw;
+  width: 60vw;
   height: 90vh;
 }
 form {
   width: 100%;
 }
 .params {
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 }
 input[type=text] {
   width: 40%;

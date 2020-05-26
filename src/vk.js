@@ -1,33 +1,35 @@
 import fetchJsonp from 'fetch-jsonp'
 import bridge from '@vkontakte/vk-bridge'
 
-const apiVersion = '5.103'
+const apiVersion = '5.107'
+const token =
+  'fcd7d10dfcd7d10dfcd7d10da6fca5fd21ffcd7fcd7d10da21cf9e0cd6060f7bc952157'
 const urlParams = new URLSearchParams(window.location.search)
 const initGroupId = parseInt(urlParams.get('vk_group_id'))
-if (!initGroupId) {
-  let div = document.createElement('div')
-  div.className = 'alert'
-  div.style.marginBottom = '10px'
-  div.innerHTML =
-    '<strong>Ошибка!</strong><br>Приложение может работать только при запуске из сообщества'
-  const loader = document.getElementById('loader')
-  loader.before(div)
-  loader.style.display = 'none'
-} else {
-  // Логирует все события нативного клиента в консоль
-  bridge.subscribe((e) => console.log(e))
 
-  // Отправляет событие нативному клиенту
-  bridge
-    .send('VKWebAppInit', {})
-    .then(() => {
+// Логирует все события нативного клиента в консоль
+bridge.subscribe((e) => console.log(e))
+
+// Отправляет событие нативному клиенту
+bridge
+  .send('VKWebAppInit', {})
+  .then(() => {
+    const loader = document.getElementById('loader')
+    if (!initGroupId) {
+      let div = document.createElement('div')
+      div.className = 'alert'
+      div.style.marginBottom = '10px'
+      div.innerHTML =
+        '<strong>Ошибка!</strong><br>Приложение может работать только при запуске из сообщества'
+      loader.before(div)
+    } else {
       document.getElementById('main-form').style.display = 'block'
-      document.getElementById('loader').style.display = 'none'
-    })
-    .catch((ex) => {
-      console.log(ex)
-    })
-}
+    }
+    loader.style.display = 'none'
+  })
+  .catch((ex) => {
+    console.log(ex)
+  })
 
 export async function widgetPreview(rating, userData) {
   const body = rating.map((user) => {
@@ -63,11 +65,8 @@ export async function widgetPreview(rating, userData) {
   return result
 }
 
-const token =
-  'fcd7d10dfcd7d10dfcd7d10da6fca5fd21ffcd7fcd7d10da21cf9e0cd6060f7bc952157'
-
 export async function getUsersData(userIds) {
-  let options = {
+  const options = {
     v: apiVersion,
     access_token: token,
     user_ids: userIds,
@@ -78,7 +77,7 @@ export async function getUsersData(userIds) {
 }
 
 export async function getWallPostsIds(groupId, count = 1) {
-  let options = {
+  const options = {
     v: apiVersion,
     access_token: token,
     count: count,
@@ -93,7 +92,7 @@ export async function getWallPostsIds(groupId, count = 1) {
 }
 
 export async function getLikesFromPost(groupId, postId) {
-  let options = {
+  const options = {
     v: apiVersion,
     access_token: token,
     owner_id: groupId,
