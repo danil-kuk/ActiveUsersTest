@@ -1,22 +1,28 @@
 import * as vk from './vk'
 
-const wallButton = document.getElementById('wallButton')
+const mainForm = document.getElementById('main-form')
 const loader = document.getElementById('loader')
 
-wallButton.addEventListener('click', async function () {
-  wallButton.style.display = 'none'
-  loader.style.display = 'block'
-  const wallPostsIds = await vk.getWallPostsIds(30)
-  const likesRating = await handlePosts(wallPostsIds)
-  await vk.widgetPreview(likesRating)
-  loader.style.display = 'none'
-  wallButton.style.display = 'block'
+mainForm.addEventListener('submit', function (e) {
+  e.preventDefault()
+  const groupId = mainForm['group-id'].value
+  handleForm(groupId)
 })
 
-async function handlePosts(data) {
+async function handleForm(groupId) {
+  mainForm.style.display = 'none'
+  loader.style.display = 'block'
+  const wallPostsIds = await vk.getWallPostsIds(groupId, 30)
+  const likesRating = await handlePosts(groupId, wallPostsIds)
+  await vk.widgetPreview(likesRating)
+  loader.style.display = 'none'
+  mainForm.style.display = 'block'
+}
+
+async function handlePosts(groupId, data) {
   let dict = {}
   for (const postId of data) {
-    const likes = await vk.getLikesFromPost(postId)
+    const likes = await vk.getLikesFromPost(groupId, postId)
     const users = await vk.getUsersData(likes)
     for (const user of users) {
       if (dict[user.id] === undefined) {

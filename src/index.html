@@ -14,12 +14,20 @@
   <noscript>
     You need to enable JavaScript to run this app.
   </noscript>
-  <button id="wallButton">Добавить виджет</button>
-  <div class="lds-ellipsis" style="display: none;" id="loader">
-    <div></div>
-    <div></div>
-    <div></div>
-    <div></div>
+  <div class="content">
+    <form id="main-form">
+      <div class="params">
+        <input type="text" name="group-id" id="group-id"> Id группы
+      </div>
+      <input type="submit" value="Добавить виджет">
+    </form>
+
+    <div class="lds-ellipsis" style="display: none;" id="loader">
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
   </div>
   <script src="./index.js"></script>
 </body>

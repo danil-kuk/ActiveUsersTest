@@ -1,9 +1,9 @@
 import fetchJsonp from 'fetch-jsonp'
 import bridge from '@vkontakte/vk-bridge'
 
-const groupId = -180174909
-const appId = 7482412
 const apiVersion = '5.103'
+const urlParams = new URLSearchParams(window.location.search)
+const initGroupId = parseInt(urlParams.get('vk_group_id'))
 
 bridge.subscribe((e) => console.log(e))
 
@@ -37,24 +37,10 @@ export async function widgetPreview(data) {
       "body": ${JSON.stringify(body)}
   };`,
     type: 'table',
-    group_id: 189385055,
+    group_id: initGroupId,
   })
   .catch(er => console.log('Widget Error!', er))
   return result
-}
-
-/**
- * @deprecated However, the code might be usefull
- */
-export async function getAppWidgetToken() {
-  return await bridge
-    .send('VKWebAppGetCommunityToken', {
-      app_id: appId,
-      group_id: 189385055,
-      scope: 'app_widget',
-    })
-    .then((response) => response.access_token)
-    .catch((ex) => console.log('Token Error!', ex))
 }
 
 const token =
@@ -77,7 +63,7 @@ export async function getUsersData(userIds) {
   return red
 }
 
-export async function getWallPostsIds(count = 1) {
+export async function getWallPostsIds(groupId, count = 1) {
   let options = {
     v: apiVersion,
     access_token: token,
@@ -92,7 +78,7 @@ export async function getWallPostsIds(count = 1) {
   return reduce
 }
 
-export async function getLikesFromPost(postId) {
+export async function getLikesFromPost(groupId, postId) {
   let options = {
     v: apiVersion,
     access_token: token,
